@@ -20,7 +20,7 @@ from __future__ import annotations
 import streamlit as st
 import pandas as pd
 
-from src.simulation import (
+from simulation import (
     MEDIATORS,
     PATH_B_OR,
     PATH_B_BETA,
