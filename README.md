@@ -102,11 +102,11 @@ This closed-form approach computes the precise mediation percentages instantaneo
 
 | Mediator | Proportion Mediated (%) | Path B Odds Ratio | Interpretation |
 |---|---|---|---|
-| **Physical Activity** | **20.68%** — Primary Bridge | **OR = 0.8220** (17.80% risk reduction) | Higher income significantly increases exercise access; regular physical activity is the strongest independent behavioural defence against hypertension. |
-| **Vegetable Consumption** | **8.44%** — Modest Link | **OR = 0.9350** (6.50% risk reduction) | Income moderately improves vegetable intake, but the downstream protective effect is incremental. |
-| **Fruit Consumption** | **5.77%** — Structural Bottleneck | **OR = 0.9000** (10.00% risk reduction) | Income is an exceptionally weak driver of fruit habits (Cramér's V = 0.0811). This bottleneck strongly indicates **non-income geographic constraints**—urban food deserts and broken fresh-produce supply chains. |
+| **Physical Activity** | **20.68%** — Primary Bridge | **OR = 0.8220** (17.80% risk reduction) | Higher income significantly drives exercise access; regular physical activity drops the independent odds of developing hypertension by 17.80% while holding all other demographic covariates constant. |
+| **Vegetable Consumption** | **8.44%** — Modest Link | **OR = 0.9350** (6.50% risk reduction) | Income moderately improves vegetable intake, but the downstream protective shift yields a modest 6.50% reduction in hypertension odds. |
+| **Fruit Consumption** | **5.77%** — Structural Bottleneck | **OR = 0.9000** (10.00% risk reduction) | Regular fruit intake is clinically protective, reducing hypertension odds by 10.00%. However, income is an exceptionally weak driver of fruit habits (V = 0.0811), exposing massive non-income structural constraints. |
 | **Combined Behaviours** | **34.89%** | — | The three behavioural pathways together explain roughly one-third of the socioeconomic hypertension gap. |
-| **Direct / Unexplained** | **~65.11%** | OR = 0.907 (Income, fully controlled) | The majority of the disparity is driven by systemic factors *outside* lifestyle modification—chronic financial stress, healthcare access barriers, and environmental neighbourhood constraints. |
+| **Direct / Unexplained** | **~65.11%** | OR = 0.907 (Income, fully controlled) | Every incremental leap up the continuous income ranking scales down the unexplained odds of hypertension by 9.30% directly, proving systemic poverty constraints dominate individual choice. |
 
 #### Strategic Policy Recommendations
 
@@ -118,7 +118,7 @@ This closed-form approach computes the precise mediation percentages instantaneo
 
 ---
 
-### 💡 5. What You Learned
+### 💡 5. What I Learned
 
 #### Engineering: Escaping the Simulation Bottleneck
 
@@ -128,9 +128,9 @@ The fix was a full architectural pivot to **parametric algebraic extraction**. B
 
 #### UI/UX: Ghost Signs and Delta Polarity
 
-During the Streamlit dashboard development, an initial naive implementation passed `delta=f"{result.absolute_risk_reduction:.1%}"` directly to `st.metric()`. Because a *reduction* in hypertension prevalence is a clinically positive outcome, but the absolute risk reduction is mathematically positive (42.9% → 42.0% produces ARR = +0.9%), the metric card rendered a **red "up-arrow" delta**—communicating the exact wrong signal to a public-health policymaker.
+During the Streamlit dashboard development, an initial naive implementation passed `delta=f"{result.absolute_risk_reduction:.1%}"` directly to `st.metric()`. Because a *reduction* in hypertension prevalence is a clinically positive outcome, but the absolute risk reduction is mathematically positive (42.9% → 42.0% produces ARR = +0.9%), the metric card rendered a **green "up-arrow" delta**—communicating the exact wrong signal to a public-health policymaker.
 
-The fix required explicitly inverting the sign: `delta=f"{-result.absolute_risk_reduction:.1%}"` combined with `delta_color="inverse"` to ensure that clinically beneficial reductions display as **green downward trends** across all active slider permutations. This was a critical UX lesson: **mathematical correctness is not the same as communicative clarity**.
+The fix required explicitly inverting the sign: `delta=f"{-abs(result.absolute_risk_reduction):.1%}"` combined with `delta_color="normal"` to ensure that clinically beneficial reductions display as **red downward trends** across all active slider permutations. This was a critical UX lesson: **mathematical correctness is not the same as communicative clarity**.
 
 ---
 
