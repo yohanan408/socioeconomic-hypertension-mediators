@@ -1,0 +1,52 @@
+# ── OS / system junk ──────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Python compilation artifacts ──────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+*.whl
+
+# ── Jupyter Notebook checkpoints ──────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# ── Raw data (never commit) ───────────────────────────────────────────
+data/
+*.csv
+*.csv.gz
+*.zip
+*.parquet
+*.feather
+
+# ── Logs & local output ───────────────────────────────────────────────
+pipeline.log
+*.log
+
+# ── IDE / editor config ───────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Streamlit secrets (if ever added) ─────────────────────────────────
+.streamlit/secrets.toml
+
+# ── Environment ───────────────────────────────────────────────────────
+.env
+.venv/
+env/
+venv/
