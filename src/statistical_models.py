@@ -21,7 +21,7 @@ Confidence Intervals.
 import numpy as np
 import pandas as pd
 
-from src.logger import logger
+from logger import logger
 
 
 # ── covariate set used in every model ─────────────────────────────────
