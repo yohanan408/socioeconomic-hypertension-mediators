@@ -1,7 +1,7 @@
 # To What Extent Do Physical Activities and Dietary Habits Link Income and Hypertension?
 
 ## An Explanatory Causal Inference & Empirical Mediation Analysis
-**Live Application Link:** [Launch Policy Simulation Dashboard]([https://streamlit.app](https://streamlit.app/))
+**Live Application Link:** [[Launch Policy Simulation Dashboard](https://socioeconomic-hypertension-mediators-kjc46445zwdev9zdwblvfn.streamlit.app/)]([https://streamlit.app](https://streamlit.app/))
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Statsmodels](https://img.shields.io/badge/statsmodels-0.14.4-green.svg)](https://www.statsmodels.org/)
 [![Streamlit](https://img.shields.io/badge/streamlit-1.38.0-red.svg)](https://streamlit.io/)
