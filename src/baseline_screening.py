@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import chi2_contingency
 
-from src.logger import logger
+from logger import logger
 
 
 # ── helper ────────────────────────────────────────────────────────────
