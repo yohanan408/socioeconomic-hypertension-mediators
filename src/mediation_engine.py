@@ -19,7 +19,7 @@ N = 253 680 dataset.
 
 import pandas as pd
 
-from src.logger import logger
+from logger import logger
 
 
 # ── mediators in the study ────────────────────────────────────────────
