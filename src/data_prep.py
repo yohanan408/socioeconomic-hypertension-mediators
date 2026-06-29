@@ -28,7 +28,7 @@ Methodological notes on intentional data retention
 import os
 import pandas as pd
 
-from src.logger import logger
+from logger import logger
 
 
 # ── column selection ──────────────────────────────────────────────────
