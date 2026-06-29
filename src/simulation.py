@@ -27,7 +27,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 from typing import Dict, Tuple
-from src.logger import logger
+from logger import logger
 
 
 # ── Validated coefficients (from fitted logistic models) ──────────────
