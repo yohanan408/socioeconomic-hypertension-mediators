@@ -50,7 +50,7 @@ Because the feature space is dominated by low-cardinality binary and ordinal col
 
 ---
 
-### 🧠 3. Your Approach
+### 🧠 3. My Approach
 
 ```
 ┌──────────────┐     ┌──────────────────┐     ┌────────────────────┐     ┌──────────────────┐
