@@ -94,7 +94,7 @@ Standard software wrappers (e.g., `statsmodels.stats.mediation`) rely on intensi
 | Total Effect (TE) | β<sub>Direct</sub> + IE |
 | Proportion Mediated (%) | (IE / TE) × 100 |
 
-This closed-form approach computes the precise mediation percentages instantaneously—no bootstrap iterations, no simulation loops.
+This closed-form approach computes the precise mediation percentages instantaneously. No bootstrap iterations, no simulation loops.
 
 ---
 
@@ -124,7 +124,7 @@ This closed-form approach computes the precise mediation percentages instantaneo
 
 #### Engineering: Escaping the Simulation Bottleneck
 
-The initial implementation attempted to use the high-level `statsmodels.stats.mediation` wrapper, which internally computes confidence intervals via non-parametric bootstrapping of the joint distribution of Path A and Path B coefficients. At N = 253,680, this created a **severe processing bottleneck**—each mediation model required minutes of computation time, making iterative model exploration infeasible.
+The initial implementation attempted to use the high-level `statsmodels.stats.mediation` wrapper, which internally computes confidence intervals via non-parametric bootstrapping of the joint distribution of Path A and Path B coefficients. At N = 253,680, this created a **severe processing bottleneck**: Each mediation model required minutes of computation time, making iterative model exploration infeasible.
 
 The fix was a full architectural pivot to **parametric algebraic extraction**. By directly reading `model.params` and `model.conf_int()` from the fitted `LogitResultsWrapper` objects and computing the Product-of-Coefficients formulae in raw NumPy, the mediation quantification dropped from minutes to **milliseconds**, while producing numerically identical point estimates.
 
@@ -138,7 +138,7 @@ The fix required explicitly inverting the sign: `delta=f"{-abs(result.absolute_r
 
 ### 🌐 6. Deployment & Strategic Decision Support
 
-The project is deployed as an **interactive Streamlit Policy Simulation Engine** — not a real-time prediction API, but a what-if planning tool for public-health stakeholders.
+The project is deployed as an **interactive Streamlit Policy Simulation Engine**. Not a real-time prediction API, but a what-if planning tool for public-health stakeholders.
 
 **Architecture.** The dashboard (`src/app.py`) is a pure rendering layer. Every mathematical operation is delegated to `src.simulation.py`, which encodes the validated mediation coefficients and executes the counterfactual projection logic:
 
