@@ -17,7 +17,7 @@
 
 ### 🚨 1. The Problem
 
-Cardiovascular disease remains the leading cause of mortality worldwide, and its burden falls disproportionately on lower-income populations. This socio-economic "health gap" is well-documented, but the **operational question** for public health agencies is not *whether* the gap exists. it is *how* to intervene.
+Cardiovascular disease remains the leading cause of mortality worldwide, and its burden falls disproportionately on lower-income populations. This socio-economic "health gap" is well-documented, but the **operational question** for public health agencies is not *whether* the gap exists. It is *how* to intervene.
 
 Given a limited budget measured in millions of dollars, a health ministry must decide:
 
