@@ -46,7 +46,7 @@ Each intervention targets a different causal pathway. Investing in the wrong cha
 
 The raw dataset contains ~23,899 rows with identical response patterns across all 22 columns. **These rows are intentionally retained.**
 
-Because the feature space is dominated by low-cardinality binary and ordinal columns—with BMI often rounded to whole numbers—the total number of unique value combinations is mathematically restricted. With N = 253,680 and a limited combinatorial space, the **Pigeonhole Principle** guarantees that thousands of distinct, real individuals will produce identical survey answers. Dropping these "duplicates" would systematically erase valid respondents, break the random-sampling structure, warp prevalence weights, and invalidate the downstream causal estimates.
+Because the feature space is dominated by low-cardinality binary and ordinal columns, with BMI often rounded to whole numbers, the total number of unique value combinations is mathematically restricted. With N = 253,680 and a limited combinatorial space, the **Pigeonhole Principle** guarantees that thousands of distinct, real individuals will produce identical survey answers. Dropping these "duplicates" would systematically erase valid respondents, break the random-sampling structure, warp prevalence weights, and invalidate the downstream causal estimates.
 
 ---
 
