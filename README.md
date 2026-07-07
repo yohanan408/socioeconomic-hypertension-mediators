@@ -130,7 +130,7 @@ The fix was a full architectural pivot to **parametric algebraic extraction**. B
 
 #### UI/UX: Ghost Signs and Delta Polarity
 
-During the Streamlit dashboard development, an initial naive implementation passed `delta=f"{result.absolute_risk_reduction:.1%}"` directly to `st.metric()`. Because a *reduction* in hypertension prevalence is a clinically positive outcome, but the absolute risk reduction is mathematically positive (42.9% → 42.0% produces ARR = +0.9%), the metric card rendered a **green "up-arrow" delta**—communicating the exact wrong signal to a public-health policymaker.
+During the Streamlit dashboard development, an initial naive implementation passed `delta=f"{result.absolute_risk_reduction:.1%}"` directly to `st.metric()`. Because a *reduction* in hypertension prevalence is a clinically positive outcome, but the absolute risk reduction is mathematically positive (42.9% → 42.0% produces ARR = +0.9%), the metric card rendered a **green "up-arrow" delta** communicating the exact wrong signal to a public-health policymaker.
 
 The fix required explicitly inverting the sign: `delta=f"{-abs(result.absolute_risk_reduction):.1%}"` combined with `delta_color="normal"` to ensure that clinically beneficial reductions display as **red downward trends** across all active slider permutations. This was a critical UX lesson: **mathematical correctness is not the same as communicative clarity**.
 
