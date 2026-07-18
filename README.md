@@ -14,6 +14,11 @@
 </p>
 
 ---
+## 🎯 Portfolio Executive Summary
+* **The Core Strategic Problem:** Standard business analytics rely heavily on passive correlations, leading teams to waste capital on generic marketing campaigns that attack superficial symptoms while root-cause confounding barriers remain unaddressed.
+* **The Causal Architecture:** This production data system utilizes a multivariable logistic regression framework based on David MacKinnon’s parametric mediation protocols to satisfy Sequential Ignorability across 253,680 CDC records.
+* **The Business & Public Health Value:** A prescriptive decision-support sandbox deployed live on Streamlit Cloud that models a **0.6% absolute reduction in hypertension prevalence**, mapping directly to **1,586 averted clinical cases** in real time.
+
 
 ### 🚨 1. The Problem
 
