@@ -14,13 +14,13 @@
 </p>
 
 ---
-## 🎯 Portfolio Executive Summary
+##  Portfolio Executive Summary
 * **The Core Strategic Problem:** Standard business analytics rely heavily on passive correlations, leading teams to waste capital on generic marketing campaigns that attack superficial symptoms while root-cause confounding barriers remain unaddressed.
 * **The Causal Architecture:** This production data system utilizes a multivariable logistic regression framework based on David MacKinnon’s parametric mediation protocols to satisfy Sequential Ignorability across 253,680 CDC records.
 * **The Business & Public Health Value:** A prescriptive decision-support sandbox deployed live on Streamlit Cloud that models a **0.6% absolute reduction in hypertension prevalence**, mapping directly to **1,586 averted clinical cases** in real time.
 
 
-### 🚨 1. The Problem
+###  1. The Problem
 
 Cardiovascular disease remains the leading cause of mortality worldwide, and its burden falls disproportionately on lower-income populations. This socio-economic "health gap" is well-documented, but the **operational question** for public health agencies is not *whether* the gap exists. It is *how* to intervene.
 
@@ -34,7 +34,7 @@ Each intervention targets a different causal pathway. Investing in the wrong cha
 
 ---
 
-### 📊 2. The Data / Inputs
+###  2. The Data / Inputs
 
 | Attribute | Detail |
 |---|---|
@@ -55,7 +55,7 @@ Because the feature space is dominated by low-cardinality binary and ordinal col
 
 ---
 
-### 🧠 3. My Approach
+###  3. My Approach
 
 ```
 ┌──────────────┐     ┌──────────────────┐     ┌────────────────────┐     ┌──────────────────┐
@@ -103,7 +103,7 @@ This closed-form approach computes the precise mediation percentages instantaneo
 
 ---
 
-### 🏆 4. The Outcome
+###  4. The Outcome
 
 #### Quantified Transmission Channels
 
@@ -125,7 +125,7 @@ This closed-form approach computes the precise mediation percentages instantaneo
 
 ---
 
-### 💡 5. What I Learned
+###  5. What I Learned
 
 #### Engineering: Escaping the Simulation Bottleneck
 
@@ -141,7 +141,7 @@ The fix required explicitly inverting the sign: `delta=f"{-abs(result.absolute_r
 
 ---
 
-### 🌐 6. Deployment & Strategic Decision Support
+###  6. Deployment & Strategic Decision Support
 
 The project is deployed as an **interactive Streamlit Policy Simulation Engine**. Not a real-time prediction API, but a what-if planning tool for public-health stakeholders.
 
@@ -171,7 +171,7 @@ streamlit run src/app.py
 
 ---
 
-### 🗂️ Repository Structure
+###  Repository Structure
 
 ```
 .
