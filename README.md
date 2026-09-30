@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">
-  <em>A production-grade causal mediation pipeline quantifying the structural pathways from socioeconomic position to cardiovascular health, fitted on N = 253,680 CDC BRFSS 2015 records.</em>
+  <em>An end-to-end observational mediation pipeline examining the relationships between socioeconomic position, lifestyle behaviours, and hypertension across 253,680 BRFSS 2015 records.</em>
 </p>
 
 ---
