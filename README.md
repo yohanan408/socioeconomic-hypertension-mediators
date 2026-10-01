@@ -15,9 +15,8 @@
 ---
 ##  Portfolio Executive Summary
 * **The Core Strategic Problem:** Standard business analytics rely heavily on passive correlations, leading teams to waste capital on generic marketing campaigns that attack superficial symptoms while root-cause confounding barriers remain unaddressed.
-* **The Causal Architecture:** This production data system utilizes a multivariable logistic regression framework based on David MacKinnon’s parametric mediation protocols to satisfy Sequential Ignorability across 253,680 CDC records.
-* **The Business & Public Health Value:** A prescriptive decision-support sandbox deployed live on Streamlit Cloud that models a **0.6% absolute reduction in hypertension prevalence**, mapping directly to **1,586 averted clinical cases** in real time.
-
+* **The Causal Architecture:** Sequential Ignorability is a key assumption underlying causal mediation analysis: conditional on the observed covariates, there should be no unmeasured confounding of the treatment–mediator and mediator–outcome relationships. Rather than relying on unadjusted bivariate associations, we fitted multivariate logistic regression models using statsmodels, adjusting for Age, Sex, BMI, and Education level across the mediation paths. This specification reduces confounding from the measured covariates and provides adjusted coefficients for the empirical mediation decomposition. However, Sequential Ignorability cannot be established from the observed data alone; the resulting estimates should therefore be interpreted conditional on the validity of the underlying mediation assumptions.
+* **The Business & Public Health Value:** The interactive simulation estimates a projected 0.6 percentage-point reduction in hypertension prevalence under a specified behavioural-access scenario, corresponding to approximately 1,586 projected cases in the modelled population.
 
 ###  1. The Problem
 
@@ -38,7 +37,7 @@ Each intervention targets a different causal pathway. Investing in the wrong cha
 | Attribute | Detail |
 |---|---|
 | **Source** | CDC Behavioral Risk Factor Surveillance System (BRFSS) — Heart Disease Health Indicators (2015) |
-| **Sample Size** | N = 253,680 unique respondents |
+| **Sample Size** | 253,680 BRFSS 2015 records |
 | **Target Variable** | `HighBP` — binary clinical indicator of hypertension diagnosis |
 | **Primary Exposure** | `Income` — 8-level ordinal household income scale |
 | **Behavioural Mediators** | `PhysActivity` (binary), `Fruits` (binary), `Veggies` (binary) |
@@ -46,11 +45,11 @@ Each intervention targets a different causal pathway. Investing in the wrong cha
 
 **Variable Typology.** BMI operates as the sole continuous covariate; the remaining 7 features are binary flags or ordinal ranks, yielding a lean 9-variable model that satisfies the principle of parsimony for structural equation estimation.
 
-#### Data Integrity: The Pigeonhole Principle
+#### Duplicate Response Patterns
 
-The raw dataset contains ~23,899 rows with identical response patterns across all 22 columns. **These rows are intentionally retained.**
+Approximately 23,899 records share identical values across the selected response variables. These records were retained rather than deduplicated because identical response patterns do not necessarily represent duplicate observations of the same respondent. Removing them would change the observed sample distribution and could alter prevalence estimates and model coefficients.
 
-Because the feature space is dominated by low-cardinality binary and ordinal columns, with BMI often rounded to whole numbers, the total number of unique value combinations is mathematically restricted. With N = 253,680 and a limited combinatorial space, the **Pigeonhole Principle** guarantees that thousands of distinct, real individuals will produce identical survey answers. Dropping these "duplicates" would systematically erase valid respondents, break the random-sampling structure, warp prevalence weights, and invalidate the downstream causal estimates.
+The project therefore treats these records as observations in the supplied dataset rather than assuming that identical feature vectors represent erroneous duplicates.
 
 ---
 
@@ -78,19 +77,18 @@ Before constructing parametric models, we mapped raw association strengths using
 - **Chi-Square (χ²) Tests of Independence** — established statistically significant baseline links (all p < 0.0001, driven by the massive sample).
 - **Cramér's V** — computed via single-pass algebra (`V = √(χ² / (n · min(r,k)-1))`) to avoid redundant computation at scale.
 
-Because the dataset's extreme statistical power forces p-values to zero for any non-zero relationship, **evaluation relies strictly on effect sizes**, not significance thresholds.
-
+Given the large sample size, the analysis considers effect sizes alongside statistical significance when assessing the strength of associations.
 #### Stage 2 — Multivariate Logistic Regression (Why Not ML)
 
 Three independent Path A models estimated the effect of Income on each mediator, adjusting for Age, Sex, BMI, and Education. A single Path B model estimated the simultaneous effects of Income, all three mediators, and all covariates on HighBP.
 
-**Predictive machine learning algorithms (random forests, gradient boosting, neural nets) were intentionally rejected.** This is an *explanatory* causal study, not a prediction task. Black-box models produce uninterpretable feature-importance metrics that conflate correlation with causation and cannot isolate the specific β coefficients required for formal mediation algebra. Logistic regression, by contrast, provides clean, identifiable log-odds parameters that satisfy the **Sequential Ignorability** assumption when the covariate set is defensible.
+**Predictive machine learning algorithms (random forests, gradient boosting, neural nets) were intentionally rejected.** This is an *explanatory* causal study, not a prediction task. Black-box models produce uninterpretable feature-importance metrics that conflate correlation with causation and cannot isolate the specific β coefficients required for formal mediation algebra. The logistic models provide adjusted coefficient estimates for the mediation decomposition while controlling for the measured covariates. The resulting interpretation remains conditional on the mediation assumptions, including the assumption that important unmeasured confounding is adequately controlled.
 
 All models were fitted via `statsmodels.formula.api.logit` with Maximum Likelihood Estimation.
 
 #### Stage 3 — Product-of-Coefficients Mediation
 
-Standard software wrappers (e.g., `statsmodels.stats.mediation`) rely on intensive non-parametric simulation loops or numerical integrations that create a severe processing bottleneck at N > 250k. To resolve this while maintaining mathematical rigor, the **Product of Coefficients Method** (MacKinnon, Fairchild & Fritz, 2007) was implemented algebraically:
+Standard software wrappers (e.g., `statsmodels.stats.mediation`) rely on intensive non-parametric simulation loops or numerical integrations that create a severe processing bottleneck at N > 250k. To resolve this while maintaining mathematical rigor, the **Product of Coefficients Method** (MacKinnon, Fairchild & Fritz, 2007) was implemented algebraically.**The simulator applies the fitted Path B coefficients to hypothetical changes in mediator prevalence.**:
 
 | Metric | Formula |
 |---|---|
@@ -98,8 +96,7 @@ Standard software wrappers (e.g., `statsmodels.stats.mediation`) rely on intensi
 | Total Effect (TE) | β<sub>Direct</sub> + IE |
 | Proportion Mediated (%) | (IE / TE) × 100 |
 
-This closed-form approach computes the precise mediation percentages instantaneously. No bootstrap iterations, no simulation loops.
-
+These projections are generated from observational mediation models and should not be interpreted as causal guarantees or clinical predictions. Results depend on the fitted model specification, mediation assumptions, observed covariate adjustment, and generalisability of the BRFSS 2015 sample.
 ---
 
 ###  4. The Outcome
@@ -108,20 +105,19 @@ This closed-form approach computes the precise mediation percentages instantaneo
 
 | Mediator | Proportion Mediated (%) | Path B Odds Ratio | Interpretation |
 |---|---|---|---|
-| **Physical Activity** | **20.68%** — Primary Bridge | **OR = 0.8220** (17.80% risk reduction) | Higher income significantly drives exercise access; regular physical activity drops the independent odds of developing hypertension by 17.80% while holding all other demographic covariates constant. |
-| **Vegetable Consumption** | **8.44%** — Modest Link | **OR = 0.9350** (6.50% risk reduction) | Income moderately improves vegetable intake, but the downstream protective shift yields a modest 6.50% reduction in hypertension odds. |
-| **Fruit Consumption** | **5.77%** — Structural Bottleneck | **OR = 0.9000** (10.00% risk reduction) | Regular fruit intake is clinically protective, reducing hypertension odds by 10.00%. However, income is an exceptionally weak driver of fruit habits (V = 0.0811), exposing massive non-income structural constraints. |
-| **Combined Behaviours** | **34.89%** | — | The three behavioural pathways together explain roughly one-third of the socioeconomic hypertension gap. |
-| **Direct / Unexplained** | **~65.11%** | OR = 0.907 (Income, fully controlled) | Every incremental leap up the continuous income ranking scales down the unexplained odds of hypertension by 9.30% directly, proving systemic poverty constraints dominate individual choice. |
+| **Physical Activity** | **20.68%** — Primary Bridge | **OR = 0.8220** (17.80% lower odds) | Higher income significantly drives exercise access; regular physical activity drops the independent odds of developing hypertension by 17.80% while holding all other demographic covariates constant. |
+| **Vegetable Consumption** | **8.44%** — Modest Link | **OR = 0.9350** (6.50% lower odds) | Income moderately improves vegetable intake, but the downstream protective shift yields a modest 6.50% reduction in hypertension odds. |
+| **Fruit Consumption** | **5.77%** — Structural Bottleneck | **OR = 0.9000** (10.00% lower odds) | Regular fruit intake is clinically protective, reducing hypertension odds by 10.00%. However, income is an exceptionally weak driver of fruit habits (V = 0.0811), exposing massive non-income structural constraints. |
+| **Combined Behaviours** | **34.89%** | — | The three estimated mediator-specific proportions sum to approximately one-third under the project's product-of-coefficients decomposition. This combined figure should be interpreted as a model-based decomposition rather than a directly observed causal contribution. |
+| **Adjusted direct income component** | **~65.11%** | OR = 0.907 (Income, fully controlled) | The remaining component of the model-based income association after accounting for the specified behavioural mediators and measured covariates. It should not be interpreted as a direct estimate of a specific unmeasured systemic mechanism. |
 
-#### Strategic Policy Recommendations
+#### Illustrative Policy Implications
 
-1. **Prioritise Physical Infrastructure over Lifestyle Marketing** — Funds should build free community fitness spaces and well-lit walking trails in low-income zip codes rather than funding passive "exercise awareness" advertisements.
+1. **Evaluate access-oriented physical activity interventions** — The relatively larger model-based mediation estimate for physical activity suggests that access to opportunities for physical activity could be an area for further intervention research.
 
-2. **Address Supply Chains and Zoning, Not Vouchers** — Because income is a negligible driver of fruit consumption, fruit subsidies will fail. Policy must target zoning laws that incentivise grocery placement and municipal community gardens in food deserts.
+2. **Investigate food-access mechanisms** — The comparatively smaller estimated income–fruit pathway suggests that income alone may not capture the factors shaping fruit consumption. Future analysis could examine food availability, geographic access, pricing, and other structural factors.
 
-3. **Fund Structural Safety Nets** — With ~65% of the gap unexplained by behaviour, healthcare systems must deploy non-clinical stabilisers: expanded Medicaid coverage, reduced prescription co-pays for baseline diagnostics, and local economic relief programmes to suppress chronic cortisol-inducing financial strain.
-
+3. **Examine non-behavioural pathways** — The remaining income association after accounting for the specified behavioural mediators motivates further investigation of healthcare access, economic conditions, environmental factors, and other potential pathways not included in the current model.
 ---
 
 ###  5. What I Learned
@@ -130,7 +126,7 @@ This closed-form approach computes the precise mediation percentages instantaneo
 
 The initial implementation attempted to use the high-level `statsmodels.stats.mediation` wrapper, which internally computes confidence intervals via non-parametric bootstrapping of the joint distribution of Path A and Path B coefficients. At N = 253,680, this created a **severe processing bottleneck**: Each mediation model required minutes of computation time, making iterative model exploration infeasible.
 
-The fix was a full architectural pivot to **parametric algebraic extraction**. By directly reading `model.params` and `model.conf_int()` from the fitted `LogitResultsWrapper` objects and computing the Product-of-Coefficients formulae in raw NumPy, the mediation quantification dropped from minutes to **milliseconds**, while producing numerically identical point estimates.
+The fix was a full architectural pivot to **parametric algebraic extraction**. By directly reading `model.params` and `model.conf_int()` from the fitted `LogitResultsWrapper` objects and computing the Product-of-Coefficients formulae in raw NumPy, the mediation quantification dropped from minutes to **milliseconds**, while preserving the project's point-estimate calculation
 
 #### UI/UX: Ghost Signs and Delta Polarity
 
@@ -142,9 +138,9 @@ The fix required explicitly inverting the sign: `delta=f"{-abs(result.absolute_r
 
 ###  6. Deployment & Strategic Decision Support
 
-The project is deployed as an **interactive Streamlit Policy Simulation Engine**. Not a real-time prediction API, but a what-if planning tool for public-health stakeholders.
+The project is deployed as an **Interactive Streamlit Mediation-Based Scenario Simulator**. Not a real-time prediction API, but a what-if planning tool for public-health stakeholders.
 
-**Architecture.** The dashboard (`src/app.py`) is a pure rendering layer. Every mathematical operation is delegated to `src.simulation.py`, which encodes the validated mediation coefficients and executes the counterfactual projection logic:
+**Architecture.** The dashboard (`src/app.py`) is a pure rendering layer. Every mathematical operation is delegated to `src.simulation.py`, which encodes the estimated Path B coefficients and executes the counterfactual projection logic:
 
 ```
 Log-Odds Shift = (min(baseline_prop × (1 + slider/100), 1.0) − baseline_prop)
